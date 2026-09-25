@@ -9,7 +9,6 @@ from .models import Product
 from .forms import ProductForm, RegisterForm
 
 
-# --- Авторизация ---
 
 class UserLoginView(LoginView):
     template_name = 'login.html'
@@ -35,7 +34,6 @@ class RegisterView(View):
         return render(request, 'register.html', {'form': form})
 
 
-# --- Товары c поиском ---
 
 class ProductListView(LoginRequiredMixin, ListView):
     model = Product
@@ -66,7 +64,6 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     template_name = 'product_form.html'
     success_url = reverse_lazy('product_list')
 
-    # Автоматически сохраняем текущего пользователя как автора
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
