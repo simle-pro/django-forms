@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }} — Детали товара</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .product-card {
+            background: #ffffff;
+            padding: 35px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: color 0.2s ease;
+        }
+
+        .back-link:hover {
+            color: #764ba2;
+        }
+
+        .product-title {
+            color: #2d3748;
+            font-size: 26px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            word-break: break-word;
+        }
+
+        .product-price-tag {
+            display: inline-block;
+            background: #ebf8ff;
+            color: #2b6cb0;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .product-description-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #a0aec0;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .product-description {
+            color: #4a5568;
+            font-size: 15px;
+            line-height: 1.6;
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            white-space: pre-wrap;
+            border: 1px solid #edf2f7;
+        }
+
+        .product-author {
+            font-size: 13px;
+            color: #718096;
+            margin-bottom: 25px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #edf2f7;
+            padding-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            padding: 11px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-edit {
+            background: #4299e1;
+            color: #ffffff;
+        }
+
+        .btn-edit:hover {
+            background: #3182ce;
+            box-shadow: 0 4px 12px rgba(66, 153, 225, 0.3);
+        }
+
+        .btn-delete {
+            background: #fed7d7;
+            color: #c53030;
+        }
+
+        .btn-delete:hover {
+            background: #feb2b2;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="product-card">
+        <a href="{% url 'product_list' %}" class="back-link">← Назад к списку товаров</a>
+
+        <h1 class="product-title">{{ product.name }}</h1>
+
+        <div class="product-price-tag">
+            {{ product.price }} TJS
+        </div>
+
+        <div class="product-description-label">Описание</div>
+        <div class="product-description">
+            {{ product.description }}
+        </div>
+
+        {% if product.author %}
+            <div class="product-author">
+                Добавил: <strong>{{ product.author.username }}</strong>
+            </div>
+        {% endif %}
+
+        <div class="actions">
+            <a href="{% url 'product_update' product.pk %}" class="btn btn-edit">Редактировать</a>
+            <a href="{% url 'product_delete' product.pk %}" class="btn btn-delete">Удалить</a>
+        </div>
+    </div>
+
+</body>
+</html>

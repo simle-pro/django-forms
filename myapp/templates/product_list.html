@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список товаров</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #2d3748;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Шапка страницы */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 20px 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .header h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d3748;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-logout {
+            background: #fed7d7;
+            color: #c53030;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background: #feb2b2;
+        }
+
+        /* Панель поиска и создания */
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .search-form {
+            display: flex;
+            flex: 1;
+            gap: 10px;
+            min-width: 280px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-input:focus {
+            border-color: #667eea;
+        }
+
+        .btn-search {
+            background: #667eea;
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-search:hover {
+            background: #5a6fd1;
+        }
+
+        .btn-reset {
+            display: inline-flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #e2e8f0;
+            color: #4a5568;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+
+        .btn-reset:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-add {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #48bb78;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-add:hover {
+            background: #38a169;
+        }
+
+        /* Сетка товаров */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .product-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            text-decoration: none;
+            margin-bottom: 10px;
+            display: block;
+            word-break: break-word;
+        }
+
+        .product-title:hover {
+            color: #667eea;
+        }
+
+        .product-price {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2b6cb0;
+            margin-bottom: 15px;
+        }
+
+        .product-author {
+            font-size: 13px;
+            color: #a0aec0;
+            border-top: 1px solid #edf2f7;
+            padding-top: 10px;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            color: #718096;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Шапка -->
+        <header class="header">
+            <h2>Список товаров</h2>
+            <div class="user-actions">
+                <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-logout">Выйти из аккаунта</button>
+                </form>
+            </div>
+        </header>
+
+        <!-- Поиск и Добавление -->
+        <div class="controls">
+            <form method="get" action="{% url 'product_list' %}" class="search-form">
+                <input type="text" name="q" class="search-input" placeholder="Поиск товара..." value="{{ request.GET.q|default:'' }}">
+                <button type="submit" class="btn-search">Искать</button>
+                {% if request.GET.q %}
+                    <a href="{% url 'product_list' %}" class="btn-reset">Сбросить</a>
+                {% endif %}
+            </form>
+
+            <a href="{% url 'product_create' %}" class="btn-add">+ Добавить товар</a>
+        </div>
+
+        <!-- Карточки товаров -->
+        <div class="product-grid">
+            {% for product in products %}
+                <div class="product-card">
+                    <div>
+                        <a href="{% url 'product_detail' product.pk %}" class="product-title">{{ product.name }}</a>
+                        <div class="product-price">{{ product.price }} сомони</div>
+                    </div>
+                    <div class="product-author">
+                        Добавил: <strong>{{ product.author.username|default:"Аноним" }}</strong>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state">
+                    Товары не найдены.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</body>
+</html>

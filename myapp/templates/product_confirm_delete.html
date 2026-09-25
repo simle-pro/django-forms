@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Удаление товара</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .delete-card {
+            background: #ffffff;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        .warning-icon {
+            font-size: 50px;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+
+        .delete-card h1 {
+            color: #2d3748;
+            font-size: 22px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .delete-card p {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .btn-delete {
+            flex: 1;
+            background: #e74c3c;
+            color: #ffffff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            display: inline-block;
+            background: #edf2f7;
+            color: #4a5568;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-cancel:hover {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-delete:active, .btn-cancel:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="delete-card">
+        <div class="warning-icon">⚠️</div>
+        <h1>Удалить "{{ object.name }}"?</h1>
+        <p>Это действие нельзя будет отменить. Товар будет удален навсегда.</p>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="actions">
+                <a href="{% url 'product_list' %}" class="btn-cancel">Отмена</a>
+                <button type="submit" class="btn-delete">Да, удалить</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
